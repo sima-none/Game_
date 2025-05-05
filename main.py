@@ -25,7 +25,7 @@ while running:
     
     clock.tick(50)
 
-    grid = update_the_grid(grid)
+    grid = update_the_grid()
     screen.fill((0, 0, 0))
     for creature in all_creatures:
         creature.draw(screen)

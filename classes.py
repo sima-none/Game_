@@ -1,6 +1,6 @@
 import pygame
 import random
-from config import all_creatures, grid, all_rules
+from config import grid, all_rules
 
 class Cell:
     def __init__(self, owner, x, y, color="Purple"):

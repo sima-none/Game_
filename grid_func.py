@@ -2,14 +2,6 @@ from config import all_creatures, grid
 import random
 from classes import Cell
 
-def create_grid():
-    grid = []
-    for _ in range(96):
-        grid.append([])
-        for _ in range(128):
-            grid[-1].append(None)
-    return grid
-
 def update_the_grid():
     old_grid = grid[:]
     for y in range(96):
@@ -51,7 +43,7 @@ def update_the_grid():
                         if counter_of_cells[i] in rules.nonexist_with and existing_colors[color] in rules.nonexist_color:
                             like.append([all_creatures[i], color]) # Добавляем подходящие существа и цвета
                 if len(like) > 1:
-                    like = [like[random.randint(1,len(like))]]
+                    like = [like[random.randint(1,len(like) - 1)]]
                 if len(like) != 0:
                     happy_creature = like[0][0]
-                    happy_creature.cells.add(Cell(happy_creature, x, y, like[0][1]))
+                    happy_creature.cells.append(Cell(happy_creature, x, y, like[0][1]))

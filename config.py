@@ -1,4 +1,10 @@
-from grid_func import create_grid
+def create_grid():
+    grid = []
+    for _ in range(96):
+        grid.append([])
+        for _ in range(128):
+            grid[-1].append(None)
+    return grid
 
 all_creatures = []
 grid = create_grid()
