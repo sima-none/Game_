@@ -1,6 +1,6 @@
 import random
 from classes import Creature
-from config import all_creatures
+from config import all_creatures, alive_creatures
 
 def give_birth(number = 10, fullness = 32):
     if type(number) != int:
@@ -36,3 +36,4 @@ def give_birth(number = 10, fullness = 32):
         creature.add_rules()
         creature.add_cells(fullness)
         all_creatures.append(creature)
+        alive_creatures.append(creature)
