@@ -2,7 +2,6 @@ from config import all_creatures, grid, alive_creatures
 from classes import Cell
 
 def update_the_grid():
-    print("Before Update", alive_creatures, all_creatures)
     old_grid = []
     for i in grid:
         old_grid.append(i[:])
@@ -33,8 +32,6 @@ def update_the_grid():
                     for local_x in [-1, 0, 1]:
                         local = old_grid[(y + local_y) % 96][(x + local_x) % 128]
                         if local:
-                            if local.owner not in alive_creatures:
-                                print("Problem", local, local.owner, alive_creatures, all_creatures)
                             neighbouring_cells[alive_creatures.index(local.owner)] += 1
                             if local.color in neighbouring_colors:
                                 neighbouring_colors[local.color] += 1

@@ -1,8 +1,29 @@
 from config import all_creatures, grid, alive_creatures
 from giving_birth_func import give_birth
+import pickle
+
+def save_creature(creature, filename="saved_creatures.pkl"):
+    try:
+        with open(filename, "rb") as f:
+            saved_creatures = pickle.load(f)
+    except (FileNotFoundError, EOFError):
+        saved_creatures = []
+
+    saved_creatures.append(creature)
+
+    with open(filename, "wb") as f:
+        pickle.dump(saved_creatures, f)
+    print("Creature saved.")
+
+def saved_creatures(filename="saved_creatures.pkl"):
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except (FileNotFoundError, EOFError):
+        return []
 
 
-def new_simulation(screen, clock, current_creatures=None, quantity=0, frequency=0):
+def new_simulation(screen, clock, current_creatures=None, quantity=0, frequency=0, lightnesses=[50, 120]):
     for y in range(96):
             for x in range(128):
                 grid[y][x] = 0
@@ -12,7 +33,7 @@ def new_simulation(screen, clock, current_creatures=None, quantity=0, frequency=
             creature.add_cells(frequency)
         print("\nNew variation:")
     else:
-        give_birth(quantity, frequency)
+        give_birth(quantity, frequency, lightnesses)
         print("\nNew generation:")
         print(len(all_creatures), "creatures were born")
 
