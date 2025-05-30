@@ -12,8 +12,9 @@ class Cell:
         self.color = color
         self.rule = self.owner.rules[self.color]
         grid[y][x] = self
+        self.owner.alive_colors[self.color] += 1
     def draw(self, screen):
-        hls_color = np.uint8([[[self.owner.own_color, self.color, 100]]])
+        hls_color = np.uint8([[[self.owner.own_color, self.color, self.color]]])
         bgr_color = cv2.cvtColor(hls_color, cv2.COLOR_HLS2BGR)[0][0]
         rgb_color = (int(bgr_color[2]), int(bgr_color[1]), int(bgr_color[0]))
         pygame.draw.rect(screen, rgb_color, (self.x * 8, self.y * 8, 8, 8))
@@ -25,17 +26,18 @@ class Creature:
         self.cells = cells if cells != None else []
         self.own_color = own_color if own_color != None else random.randint(0,179)
         self.rules = dict()
+        self.alive_colors = dict()
     def add_rules(self, colors=[50]):
         for color in colors:
             self.rules[color] = Rule()
             self.colors = colors
-    def add_cells(self, number):
-        if type(number) != int:
-            number = random.randint(number[0],number[1])
-        elif number == 0:
-            number = random.randint(1,64)
+            self.alive_colors[color] = 0
+    def add_cells(self, live_chance):
+        if type(live_chance) != int:
+            live_chance = random.randint(live_chance[0],live_chance[1])
+        elif live_chance == 0:
+            live_chance = random.randint(1,64)
         lightness_weights = []
-        live_chance = random.randint(1,64)
         for _ in self.colors:
             lightness_weights.append(random.randint(1, 64))
         for x in range(8):
@@ -80,7 +82,6 @@ class Creature:
             for left, right in zip(left_lines, right_lines):
                 print(f"{left:<40} {right}")
             print()
-
     def draw_birth_rectangle(self, screen):
         for x in range(8):
             for y in range(8):

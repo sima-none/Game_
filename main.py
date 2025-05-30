@@ -11,7 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((1024, 768))  # создаём окно 1024 на 768. Поле состоит из 128 на 96 пустых клеток
 clock = pygame.time.Clock()
 
-quantity, frequency, lightnesses = 0, 64, [40, 80]
+quantity, frequency, lightnesses = 3, 0, [30, 80, 130]
 give_birth(quantity, frequency, lightnesses) # Создаём 10 Creatures, 32 Cells. РАНДОМ В НУЛЯХ. Можно передавать списки
 
 print(len(all_creatures), "creatures were born")
