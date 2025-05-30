@@ -2,41 +2,46 @@ import random
 from classes import Creature
 from config import all_creatures, alive_creatures
 
-def give_birth(number = 10, fullness = 32, colors = [50, 120]):
-    if type(number) != int:
+def give_birth(number=10, fullness=32, colors=[50, 120]):
+    number = normalize_number(number)
+    colors = normalize_colors(colors)
+    birth_rectangles = generate_birth_rectangles(number)
+    create_creatures(birth_rectangles, fullness, colors)
+
+def normalize_number(number):
+    if not isinstance(number, int):
         number = random.randint(number[0], number[1])
     if number == 0:
         number = random.randint(2, 24)
+    return number
 
+def normalize_colors(colors):
     if 0 in colors:
-        for i in range(len(colors)):
-            colors[i] = random.randint(2,24) * 10
-    colors = list(set(colors))
-    # создаю 10 Creatures в отдельных местах рождения. У них 64 клетки для рапределения Cells
+        colors = [random.randint(2, 24) * 10 if c == 0 else c for c in colors]
+    return list(set(colors))
 
+def generate_birth_rectangles(number):
     birth_rectangles = []
-
-    for _ in range(number): # создаю 10 мест рождения
-
-        random_x = random.randint(0, 127)
-        random_y = random.randint(0, 95)
-        one_rectangle = [random_x, random_y]
-
-        sign = 0
-        while sign == 0: # проверяем, чтобы у каждого Creature было свободное пространство
-            sign = 1
-            for each_rectangle in birth_rectangles:
-                if min(abs(each_rectangle[0] - one_rectangle[0]), (128 - abs(each_rectangle[0] - one_rectangle[0]))) < 16:
-                    if min(abs(each_rectangle[1] - one_rectangle[1]),  (96 - abs(each_rectangle[1] - one_rectangle[1]))) < 16:
-                        random_x = random.randint(0, 127)
-                        random_y = random.randint(0, 95)
-                        one_rectangle = [random_x, random_y]
-                        sign = 0
-                        break
+    for _ in range(number):
+        one_rectangle = generate_non_overlapping_rectangle(birth_rectangles)
         birth_rectangles.append(one_rectangle)
+    return birth_rectangles
 
-    for place_of_birth in birth_rectangles: # "Рожаю" 10 Creatures
-        creature = Creature(place_of_birth[0], place_of_birth[1])
+def generate_non_overlapping_rectangle(existing_rects):
+    while True:
+        x = random.randint(0, 127)
+        y = random.randint(0, 95)
+        if all(not is_too_close([x, y], other) for other in existing_rects):
+            return [x, y]
+
+def is_too_close(a, b, min_dist=16):
+    dx = min(abs(a[0] - b[0]), 128 - abs(a[0] - b[0]))
+    dy = min(abs(a[1] - b[1]), 96 - abs(a[1] - b[1]))
+    return dx < min_dist and dy < min_dist
+
+def create_creatures(birth_rectangles, fullness, colors):
+    for x, y in birth_rectangles:
+        creature = Creature(x, y)
         creature.add_rules(colors)
         creature.add_cells(fullness)
         all_creatures.append(creature)
