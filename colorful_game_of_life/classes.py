@@ -2,7 +2,7 @@ import pygame
 import random
 import cv2
 import numpy as np
-from config import grid, all_rules, all_rules_without_zeros
+from colorful_game_of_life.config import grid, all_rules, all_rules_without_zeros
 
 class Cell:
     def __init__(self, owner, x, y, color=50):
@@ -18,6 +18,8 @@ class Cell:
         bgr_color = cv2.cvtColor(hls_color, cv2.COLOR_HLS2BGR)[0][0]
         rgb_color = (int(bgr_color[2]), int(bgr_color[1]), int(bgr_color[0]))
         pygame.draw.rect(screen, rgb_color, (self.x * 8, self.y * 8, 8, 8))
+    def delete_yourself(self):
+        self.owner.delete_cell(self)
 '''(89, 2, 78)'''
 class Creature:
     def __init__(self, x, y, own_color=None, cells=None):
@@ -27,6 +29,7 @@ class Creature:
         self.own_color = own_color if own_color != None else random.randint(0,179)
         self.rules = dict()
         self.alive_colors = dict()
+        "self.type = DefaultCreature(self)"
     def add_rules(self, colors=[50]):
         for color in colors:
             self.rules[color] = Rule()
@@ -90,7 +93,10 @@ class Creature:
                 bgr_color = cv2.cvtColor(hls_color, cv2.COLOR_HLS2BGR)[0][0]
                 rgb_color = (int(bgr_color[2]), int(bgr_color[1]), int(bgr_color[0]))
                 pygame.draw.rect(screen, rgb_color, ((self.x + x) % 128 * 8, (self.y + y) % 96 * 8, 8, 8))
-
+    def delete_cell(self, cell):
+        self.cells.remove(cell)
+    def if_dead(self):
+        return 1 if len(self.me.cells) == 0 else 0
 
 
 class Rule:
@@ -99,3 +105,13 @@ class Rule:
         self.exist_color = all_rules[random.randint(0, 44)]
         self.nonexist_with = all_rules_without_zeros[random.randint(0, 35)]
         self.nonexist_color = all_rules[random.randint(0, 44)]
+
+
+class DiesWhenColorDies(Creature):
+    def __init__(self):
+        self.colors_counter = dict()
+    def delete_cell(self, cell):
+        self.cells.remove(cell)
+        self.colors_counter[cell] -= 1
+    def if_dead(self):
+        return 1 if 0 in self.colors_counter.values else 0

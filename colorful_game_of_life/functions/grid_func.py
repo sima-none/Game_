@@ -1,5 +1,5 @@
-from config import all_creatures, grid, alive_creatures
-from classes import Cell
+from colorful_game_of_life.config import all_creatures, grid, alive_creatures
+from colorful_game_of_life.classes import Cell
 
 HEIGHT = 96
 WIDTH = 128
@@ -35,7 +35,7 @@ def process_existing_cell(x, y, cell, old_grid):
 
     if not (my_neighbours in cell.rule.exist_with and my_color in cell.rule.exist_color):
         grid[y][x] = 0
-        cell.owner.cells.remove(cell)
+        cell.delete_yourself()
 
 
 def process_empty_cell(x, y, old_grid):

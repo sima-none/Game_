@@ -1,6 +1,6 @@
 import random
-from classes import Creature
-from config import all_creatures, alive_creatures
+from colorful_game_of_life.classes import Creature
+from colorful_game_of_life.config import all_creatures, alive_creatures
 
 def give_birth(number=10, fullness=32, colors=[50, 120]):
     number = normalize_number(number)

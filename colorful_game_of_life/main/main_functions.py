@@ -1,5 +1,5 @@
-from config import all_creatures, grid, alive_creatures
-from giving_birth_func import give_birth
+from colorful_game_of_life.config import all_creatures, grid, alive_creatures
+from colorful_game_of_life.functions.giving_birth_func import give_birth
 import pickle
 
 def save_creature(creature, filename="saved_creatures.pkl"):
